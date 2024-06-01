@@ -1,0 +1,153 @@
+---
+title: "ECOM 2001: Project Assignments - Test statistics for final assessment"
+subtitle: "Semester 2 - 2022"
+output: bookdown::html_document2
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+
+# Correlation
+
+Correlation between two variables, $X$ and $Y$ is described by the
+Pearson Correlation Coefficient:
+
+$$
+\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X \sigma_Y}
+$$ where $cov(X,Y)$ refers to the covariance of $X$ and $Y$.
+
+Correlation within our sample is described by summary statistic, $\rho$
+(the Pearson correlation coefficient):
+
+$$
+\hat{\rho} = \frac{\overbrace{\sum_{i = 1}^n(x_i - \bar{x})(y_i - \bar{y})}^{\text{sample covariance}}}{\underbrace{\sqrt{\sum_{i = 1}^n (x_i - \bar{x})^2}}_{\text{sample 1 standard deviation   }}\underbrace{\sqrt{\sum_{i = 1}^n (y_i - \bar{y})^2}}_{\text{  sample 2 standard deviation}}}
+$$
+
+Test statistics
+
+The test statistic is a t-statistic, where $n$ is the number of
+**pairs** of observations: $$
+t = \hat{\rho}\sqrt{\frac{n-2}{1-\hat{\rho}^2}} \sim t_{n-2}
+$$
+
+# The paired t-test
+
+The test statistic is a t-statistic where we are testing pairs of
+observations so $n_1 = n_2 = n$: $$
+t  = \frac{(\hat{\mu}_1 - \hat{\mu}_2) - (\mu_1 - \mu_2)}{\sqrt{\frac{\hat{\sigma}^2_1}{n} + \frac{\hat{\sigma}^2_2 }{n} + \frac{2 \hat{Cov}()}{n}}} \sim t_{n-1}
+$$
+
+# Testing for differences in mean - not assuming equal variances
+
+The test statistic is the t-statistic.
+
+$$
+t = \frac{(\hat{\mu}_1 - \hat{\mu}_2) - (\mu_1 - \mu_2)}{\sqrt{\frac{\hat{\sigma}^2_1}{n_1} + \frac{\hat{\sigma}^2_2}{n_2}}} \sim t_{v}
+$$ The degrees of freedom of this test statistic ($v$) are determined
+using the Welch-Satterthwaite approximation:
+
+$$
+v = \frac{\Big(\frac{\hat{\sigma}^2_1}{n_1} + \frac{\hat{\sigma}^2_2}{n_2}\Big)^2}{\frac{\Big(\frac{\hat{\sigma}^2_1}{n_1} \Big)^2}{n_1-1} + \frac{\Big(\frac{\hat{\sigma}^2_2}{n_2} \Big)^2}{n_2-1}}
+$$
+
+# Two sample test for difference in means: assuming equal variances
+
+The test statistic is the t-statistic. $$
+t = \frac{(\hat{\mu}_1 - \hat{\mu}_2) - (\mu_1 - \mu_2)}{\hat{\sigma}_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} \sim t_{n_1+n_2 - 2}
+$$ Where $n_1$ is the number of observations in sample 1 and $n_2$ the
+number of observations in sample 2. $\hat{\sigma}_p$ is the **pooled**
+estimate of the sample standard deviation: $$
+\hat{\sigma}_p = \sqrt{\frac{(n_1-1)\hat{\sigma}^2_1 + (n_2-1)\hat{\sigma}^2_2}{n_1 + n_2-2}}
+$$ \# Testing for the equality of variances
+
+The test statistic is the F-statistic. $$
+F = \frac{\hat{\sigma}^2_1}{\hat{\sigma}^2_2} \sim F_{n_1-1, n_2 - 1}
+$$
+
+# One-way ANOVA: assuming equal variances
+
+The test statistic is the ANOVA F-statistic. $$
+F = \frac{\sum_j n_j(\bar{X}_{.j} - \bar{X}_{..})^2/(k-1)}{\sum_i \sum_j(X_{ij} - \bar{X}_{.j})^2/(N-k)} \sim F_{k-1, N-k}
+$$ $k$ is the number of groups(3 here), $N$ is the total number of
+observations (150 in this case), $n_j$ is the number of observations in
+the $j^{th}$ group (50 in each group).
+
+# Testing for equality of variances
+
+The test statistic is $$
+W = \frac{(N-k)}{(k-1)}\frac{\sum_{i=1}^k N_i(Z_{i.} - Z_{..})^2}{\sum_{i = 1}^k\sum_{j = 1}^{N_i}(Z_{ij} - Z_{i.})^2} \sim F_{k-1, N-k}
+$$ where $k$ is the number of groups ($k$ = 3 in this case), $N_i$ is
+the number of observations in the $i^{th}$ group, $N$ is the total
+number of observations , $Y_{ij}$ is the value of the variable in for
+the $j^{th}$ observation from the $i^{th}$ group. Which relates to
+$Z_{ij}$. $$
+Z_{ij} =  |Y_{ij} - \bar{Y}_{i.}|, \quad \bar{Y}_{i.} \text{ is the mean of the }i^{th} \text{ group}
+$$
+
+# One way ANOVA not assuming equal variances
+
+$$\begin{aligned}H_0&: \mu_1 = \mu_2 = \mu_3 \\ H_1&: \text{At least one }\mu_j \neq \text{to the others} \end{aligned}$$
+
+The test statistic is $$
+F_W = \frac{\sum_jw_j(\bar{X}_{.j} - X^{'}_{..})^2/(k-1)}{[1 + \frac{2}{3}((k-2)v)]} \sim F_{k-1, 1/v}
+$$ Where $$
+w_j = \frac{n_j}{S^2_j}
+$$ $$
+S_j^2 = \sum_i(X_{ij} - \bar{X}_{.j})^2/(n_j -1) 
+$$
+
+$$
+X^{'}_{..} = \frac{\sum_j w_j\bar{X}_{.j}}{\sum_jw_j}
+$$ $$
+v = \frac{3\sum_j[(1-\frac{w_j}{\sum_jw_j})^2/(n_j -1)]}{k^2 -1}
+$$
+
+# Test statistics for Wilcoxon-rank-sum test: Small samples
+
+$$
+W = \sum_{j = 1}^{n_j}\text{Rank}_j \quad \text{sum of the ranks in sample }j
+$$
+
+$$
+U = W - \frac{n_2(n_2+1)}{2} \qquad W\text{ minus observations in the other group}
+$$
+
+# Test statistics for Wilcoxon-rank-sum test: large samples
+
+$$
+\mu_{W_1} = \frac{n_1(n+1)}{2} \qquad \sigma_{W_1} = \sqrt{\frac{n_1n_2(n+1)}{12}}
+$$
+
+$$
+Z = \frac{W_1 - \mu_{W_1}}{\sigma_{W_1}} = \frac{W_1 - \frac{n_1(n+1)}{2}}{\sqrt{\frac{n_1n_2(n+1)}{12}}}
+$$
+
+# The Wilcoxon signed rank test
+
+The null and alternative hypothesis for this one-tail test are: $$
+\begin{aligned}
+H_0: & M_D \leq 0 \qquad \text{the median difference in grades is lower (or no change) after the workshop} \\
+H_1: & M_D > 0 \qquad \text{the median difference in grades is higher after the workshop}
+\end{aligned}
+$$
+
+Test statistics
+
+$$
+W = \sum_{i = 1}^{n'}R_i^{(+)}
+$$
+
+# The Wilcoxon signed rank test: Large samples
+
+$n' \geq 15$ the test statistic $W$ is approximately normally
+distributed with: $$
+\mu_W = \frac{n'(n'+1)}{4}
+$$
+
+$$
+\sigma_W = \sqrt{\frac{n'(n'+1)(2n'+1)}{24}}
+$$
